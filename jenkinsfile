@@ -1,14 +1,17 @@
 node {
-    stage 'Clone Gem Demo git repo'
-    git url: 'https://github.com/TamirHadad/intercooler.git'
+    stage 'Clone project'
+    git url: 'https://github.com/romangurevitch/intercooler.git'
     def version = "2.${env.BUILD_ID}.0"
-    withEnv(["RUBYGEMS_HOST=http://localhost:8081/artifactory/api/gems/gems-local","GEM_VERSION=${version}"]) {
-        stage "Let's test"
+    withEnv(["RUBYGEMS_HOST=http://localhost:8081/artifactory/api/gems/gems-local"
+             ,"GEM_VERSION=${version}"]) {
+        stage "Test"
         sh "rspec spec"
-        stage "Let's build"
+
+        stage "Build"
         sh "bundle install"
         sh "gem build intercooler.gemspec"
-        stage "Let's Deploy"
+
+        stage "Deploy"
         sh "gem push intercooler*${version}.gem"
     }
 
